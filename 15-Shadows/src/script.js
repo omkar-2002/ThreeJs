@@ -55,10 +55,10 @@ directionalLight.shadow.radius = 10
 
 
 const directionLightHelper = new THREE.DirectionalLightHelper(directionalLight,0.3)
-// scene.add(directionLightHelper)
+scene.add(directionLightHelper)
 
 const directLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera)
-// scene.add(directLightCameraHelper)
+scene.add(directLightCameraHelper)
 directLightCameraHelper.visible = false
 
 const spotLight = new THREE.SpotLight(0xffffff,0.3,10,Math.PI * 0.2)
