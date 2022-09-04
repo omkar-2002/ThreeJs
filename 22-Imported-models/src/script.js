@@ -2,6 +2,9 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
+import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader'
+console.log(DRACOLoader)
+
 import * as dat from 'lil-gui'
 
 /**
@@ -19,15 +22,26 @@ const scene = new THREE.Scene()
 /**
  * GLTFLoader
  */
+ const dracoLoader = new DRACOLoader()
+ dracoLoader.setDecoderPath("/draco/")
 
 const gltfLoader = new GLTFLoader()
+gltfLoader.setDRACOLoader(dracoLoader)
+
+let mixer = null
+
 gltfLoader.load(
-    '/models/FlightHelmet/glTF/FlightHelmet.gltf',
+    '/models/Fox/glTF/Fox.gltf',
     (gltf)=>{
-        const children = [...gltf.scene.children]
-        for(const child of children){
-            scene.add(child)
-        }
+        // const children = [...gltf.scene.children]
+        // for(const child of children){
+        //     scene.add(child)
+        // }
+        mixer = new THREE.AnimationMixer(gltf.scene)
+        const action = mixer.clipAction(gltf.animations[2]) 
+        action.play()
+        gltf.scene.scale.set(0.025,0.025,0.025)
+        scene.add(gltf.scene)
     }
 )
 
@@ -124,6 +138,11 @@ const tick = () =>
 
     // Update controls
     controls.update()
+
+    //Animation mixer
+    if(mixer !== null){
+        mixer.update(deltaTime)
+    }
 
     // Render
     renderer.render(scene, camera)
